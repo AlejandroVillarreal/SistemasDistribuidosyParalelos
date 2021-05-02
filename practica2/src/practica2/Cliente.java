@@ -14,6 +14,7 @@ import oshi.hardware.CentralProcessor;
 import oshi.hardware.GlobalMemory;
 import oshi.hardware.HWDiskStore;
 import oshi.hardware.HardwareAbstractionLayer;
+import oshi.software.common.AbstractNetworkParams;
 import oshi.software.os.FileSystem;
 import oshi.software.os.OSFileStore;
 import oshi.software.os.OperatingSystem;
@@ -32,10 +33,26 @@ public class Cliente {
 		CentralProcessor centralProcessor = hardwareAbstractionLayer.getProcessor();
 		GlobalMemory globalMemory = systemInfo.getHardware().getMemory();
 		FileSystem fileSystem = operatingSystem.getFileSystem();
+		AbstractNetworkParams abstractNetworkParams = new AbstractNetworkParams() {
+			
+			@Override
+			public String getIpv6DefaultGateway() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String getIpv4DefaultGateway() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		};
+		
 		
 		List<HWDiskStore> hdds = hardwareAbstractionLayer.getDiskStores();
 		List <OSFileStore> fileStores = fileSystem.getFileStores();
 		
+		String name = abstractNetworkParams.getHostName();
 		String processorIdentifier = centralProcessor.getProcessorIdentifier().getName();
 		String processorModel = centralProcessor.getProcessorIdentifier().getModel();
 		String osFamily = operatingSystem.getFamily();
@@ -57,7 +74,7 @@ public class Cliente {
 //				"\nMemoriaRam: "+ramMem.toString().substring(0,4) + " GB"+
 //				"\nHDD: "+hddSize +" GB"+
 //				"\nHDD Espacio Disponible: "+freeSpace+" GB");
-		
+		systemSpecs.add(name);
 		systemSpecs.add(processorIdentifier);
 		systemSpecs.add(cpuVel);
 		systemSpecs.add(totRam);
@@ -76,13 +93,14 @@ public class Cliente {
 		Socket s = null;
 		try {
 		// instancio el server con la IP y el PORT
-			s = new Socket("127.0.0.1",5432);
+			s = new Socket("25.6.241.75",5432);
 			oos = new ObjectOutputStream(s.getOutputStream());
 			ois = new ObjectInputStream(s.getInputStream());
 		// envio un nombre
 			//oos.writeObject("Pablo");
 			//System.out.println(readFile());
 			oos.writeObject(SisInfo());
+			System.out.println(SisInfo());
 		// recibo la respuesta (el saludo personalizado)
 			//String ret = (String)ois.readObject();
 		// muestro la respuesta que envio el server

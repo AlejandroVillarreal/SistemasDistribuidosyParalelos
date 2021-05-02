@@ -11,13 +11,18 @@ import oshi.hardware.ComputerSystem;
 import oshi.hardware.GlobalMemory;
 import oshi.hardware.HWDiskStore;
 import oshi.hardware.HardwareAbstractionLayer;
+import oshi.software.common.AbstractNetworkParams;
 import oshi.software.common.AbstractOSFileStore;
 import oshi.software.os.FileSystem;
 import oshi.software.os.OSFileStore;
 import oshi.software.os.OperatingSystem;
 import oshi.util.Constants;
 //-------OSHI IMPORTS---------------------------------
+import java.awt.Color;
 
+import javax.swing.JFrame;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 public class Pruebas {
 	
 	
@@ -37,7 +42,22 @@ public class Pruebas {
 		CentralProcessor centralProcessor = hardwareAbstractionLayer.getProcessor();
 		GlobalMemory globalMemory = systemInfo.getHardware().getMemory();
 		FileSystem fileSystem = operatingSystem.getFileSystem();
+		AbstractNetworkParams abstractNetworkParams = new AbstractNetworkParams() {
+			
+			@Override
+			public String getIpv6DefaultGateway() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public String getIpv4DefaultGateway() {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		};
 		
+		String name = abstractNetworkParams.getHostName();
 		List<HWDiskStore> hdds = hardwareAbstractionLayer.getDiskStores();
 		List <OSFileStore> fileStores = fileSystem.getFileStores();
 		
@@ -62,7 +82,7 @@ public class Pruebas {
 //				"\nMemoriaRam: "+ramMem.toString().substring(0,4) + " GB"+
 //				"\nHDD: "+hddSize +" GB"+
 //				"\nHDD Espacio Disponible: "+freeSpace+" GB");
-		
+		systemSpecs.add(name);
 		systemSpecs.add(processorIdentifier);
 		systemSpecs.add(cpuVel);
 		systemSpecs.add(totRam);
@@ -73,5 +93,8 @@ public class Pruebas {
 		return systemSpecs;
 		
 	}
+	
+	
 
 }
+
